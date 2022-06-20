@@ -6,10 +6,10 @@ bool up = false;
 void setup(){
   pinMode(inPin, INPUT);
   Serial.begin(9600);
-  delay(1000);
 }
 
 void loop(){
+  delay(0.3);
   val = digitalRead(inPin);
   if (up == false && val == HIGH){
     up=true;

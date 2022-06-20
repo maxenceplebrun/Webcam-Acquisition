@@ -50,6 +50,7 @@ class Arduino(Instrument):
 
     def reset(self):
         self.serial.write("reset".encode('utf-8'))
+        self.serial.read(self.serial.in_waiting)
 
     def stop(self):
         self.reset()
@@ -111,14 +112,6 @@ class Camera(Instrument):
             self.rval, frame = self.vc.read()
             if frame is not None:
                 self.frames.append(frame)
+                cv2.imshow('frame_2',frame)
             key = cv2.waitKey(1)
         #self.vc.release()
-    
-    def save(self, directory):
-        """Save the acquired frames (reduced if necessary) to a 3D NPY file
-
-        Args:
-            directory (str): The location in which to save the NPY file
-        """
-        np.save(f"{directory}/webcam-data", self.frames)
-        np.save(f"{directory}/frame-indices-data", self.indices)
