@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 import serial
+import time
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from pylablib.devices import IMAQ
 
@@ -26,14 +27,16 @@ class Arduino(Instrument):
             name (str): The name of the Arduino (can be found using NI-MAX)
         """
         super().__init__(port, name)
-        self.serial_acquisition = serial.Serial(port[0], 9800, timeout=1)
-        self.serial_frame = serial.Serial(port[1], 9800, timeout=1)
+        self.serial= serial.Serial(port, 9600, timeout=1)
+        self.acquisition_running = True
 
-    def check_acquisition(self):
-        line = self.serial_acquisition.readline().decode()
-        if int(line) > 0:
-            return True
-        return False
+    def read_serial(self):
+        while True:
+            if self.serial.in_waiting:
+                self.frame_index = int(self.serial.readline())
+
+    def reset(self):
+        self.serial.write("reset".encode('utf-8'))
 
 class Camera(Instrument):
     def __init__(self, port, name):
@@ -73,3 +76,12 @@ class Camera(Instrument):
             directory (str): The location in which to save the NPY file
         """
         np.save(f"{directory}/webcam-data", self.frames)
+
+
+
+leo = Arduino("/dev/tty.usbmodem1101", "name")
+time.sleep(2)
+leo.check_acquisition()
+leo.reset()
+print("reset passed")
+leo.check_acquisition()

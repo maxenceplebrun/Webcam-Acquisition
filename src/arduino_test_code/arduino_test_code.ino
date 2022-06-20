@@ -6,6 +6,7 @@ bool up = false;
 void setup(){
   pinMode(inPin, INPUT);
   Serial.begin(9600);
+  delay(1000);
 }
 
 void loop(){
@@ -18,4 +19,10 @@ void loop(){
     pulseCount += 1;
   }
   Serial.println(pulseCount);
+  if(Serial.available()){
+        String serial_command = Serial.readStringUntil('\n');
+        Serial.println(serial_command);
+        if (serial_command == "reset"){
+          pulseCount = 0;
+        }}
 }
