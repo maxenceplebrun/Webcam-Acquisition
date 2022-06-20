@@ -1,15 +1,17 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QWidget, QGridLayout, QLabel, QHBoxLayout, QLineEdit, QCheckBox, QPushButton, QStackedLayout, QTreeWidget, QComboBox, QMessageBox, QFileDialog, QTreeWidgetItem, QApplication, QAction, QMenuBar, QProgressBar
-from PyQt5.QtGui import QIntValidator, QDoubleValidator, QFont, QIcon, QBrush, QColor
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIntValidator, QDoubleValidator, QFont, QIcon, QBrush, QColor, QImage, QPixmap
+from PyQt5.QtCore import Qt, QTimer
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import sys
 import os
 import time
+import cv2
 from threading import Thread
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import numpy as np
-from src.controls import Arduino
+from src.controls import Arduino, Camera
+
 
 class PlotWindow(QDialog):
     def __init__(self, parent=None):
@@ -30,12 +32,10 @@ class App(QWidget):
         self.width = 600
         self.height = 800
         self.cwd = os.path.dirname(os.path.dirname(__file__))
-        self.start_acquisition_thread()
         self.initUI()
 
     def closeEvent(self, *args, **kwargs):
-        self.acquisition_running = False
-        print("Closed")
+        self.stop_live()
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -79,7 +79,7 @@ class App(QWidget):
         self.preview_label = QLabel("Webcam Preview")
         self.preview_window.addWidget(self.preview_label)
 
-        self.numpy = np.zeros((1024, 1024))
+        self.numpy = np.zeros((1080, 1920))
         self.image_view = PlotWindow()
         self.image_view.setMinimumHeight(200)
         self.plot_image = plt.imshow(self.numpy, cmap="binary_r", vmin=0, vmax=4096)
@@ -89,8 +89,32 @@ class App(QWidget):
 
         self.main_layout.addLayout(self.preview_window)
 
+        self.arduino = Arduino("/dev/tty.usbmodem1301", "leo")
         self.show()
+        self.launch_camera()
+        self.open_live_preview_thread()
 
+    def open_live_preview_thread(self):
+        self.live_preview_thread = Thread(target=self.start_live)
+        self.live_preview_thread.start()
+
+    def start_live(self):
+        plt.ion()
+        while len(self.camera.frames) == 0 and self.camera.video_running is True:
+            print("hey")
+            pass
+        while self.camera.video_running is True:
+            self.plot_image.set_array(np.array(self.camera.frames[-1]))
+    def stop_live(self):
+        self.camera.video_running = False
+        self.camera.rval = False
+        self.arduino.acquisition_running = False
+
+    def launch_camera(self):
+        self.camera = Camera("port", "name")
+        self.camera.video_running = True
+        self.camera.loop2()
+    
     def choose_directory(self):
         folder = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.directory_cell.setText(folder)
@@ -99,17 +123,6 @@ class App(QWidget):
         self.files_saved = self.directory_save_files_checkbox.isChecked()
         self.directory_choose_button.setEnabled(self.files_saved)
         self.directory_cell.setEnabled(self.files_saved)
-
-    def start_acquisition_thread(self):
-        self.acquisition_running = True
-        self.start_acquisition_thread = Thread(target=self.start_acquisition)
-        self.start_acquisition_thread.start()
-
-    def start_acquisition(self):
-        self.arduino = Arduino(["port1, port2"], "dev0")
-        while self.acquisition_running:
-            print(time.time())
-            time.sleep(1)
 
 
 
