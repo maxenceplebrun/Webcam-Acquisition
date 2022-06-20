@@ -6,6 +6,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import sys
 import os
 import time
+import uuid
 import cv2
 from multiprocessing import Process
 from threading import Thread
@@ -21,12 +22,13 @@ class ImageThread(QThread):
         while True:
             ret, frame = cap.read()
             if ret:
+                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_index = ex.arduino.frame_index
                 print(frame_index)
                 if frame_index > 0:
-                    ex.frames.append(frame)
-                    ex.indices.append(frame_index-1)
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    #ex.frames.append(frame)
+                    #ex.indices.append(frame_index-1)
+                    cv2.imwrite(f'data/{time.time()}-{frame_index}.jpg', frame)
                 h, w, ch = rgbImage.shape
                 bytesPerLine = ch * w
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
