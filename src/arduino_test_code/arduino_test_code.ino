@@ -9,7 +9,6 @@ void setup(){
 }
 
 void loop(){
-  delay(0.3);
   val = digitalRead(inPin);
   if (up == false && val == HIGH){
     up=true;

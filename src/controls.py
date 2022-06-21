@@ -21,6 +21,7 @@ class Instrument:
         """
         self.port = port
         self.name = name
+        self.frame_index = 0
 
 class Arduino(Instrument):
     def __init__(self, port, name):
@@ -41,12 +42,23 @@ class Arduino(Instrument):
         self.read_serial_thread.start()
 
     def read_serial(self):
+        buffer_string = ''
         while self.acquisition_running:
-            if self.serial.in_waiting:
-                try:
-                    self.frame_index = int(self.serial.readline())
-                except ValueError:
-                    pass
+            buffer_string = buffer_string + self.serial.read(self.serial.inWaiting()).decode("utf-8")
+            if '\n' in buffer_string:
+                lines = buffer_string.split('\n') # Guaranteed to have at least 2 entries
+                self.frame_index = int(lines[-2])
+                #print(self.frame_index)
+            #If the Arduino sends lots of empty lines, you'll lose the
+            #last filled line, so you could make the above statement conditional
+            #like so: if lines[-2]: last_received = lines[-2]
+                buffer_string = lines[-1]
+            #if self.serial.in_waiting:
+             #   try:
+              #      self.frame_index = int(self.serial.readline())
+               #     print(self.frame_index)
+                #except ValueError:
+                 #   pass
 
     def reset(self):
         self.serial.write("reset".encode('utf-8'))

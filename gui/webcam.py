@@ -14,6 +14,36 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import numpy as np
 from src.controls import Arduino, Camera
 
+class MyThread(QThread):
+    def __init__(self, target=None):
+        super().__init__()
+        self.target = target
+    
+    def run(self):
+        if self.target:
+            self.target()
+
+
+class ProgressThread(QThread):
+    _signal = pyqtSignal(list)
+    def __init__(self):
+        super(ProgressThread, self).__init__()
+
+    def __del__(self):
+        self.wait()
+
+    def setApp(self, app):
+        self.app = app
+
+    def run(self):
+        while not self.app.all_files_saved:
+            time.sleep(1)
+            try:
+                self._signal.emit([len(self.app.frames), len(os.listdir(self.app.directory))])
+            except Exception as err:
+                print(err)
+                self._signal.emit([0,0])
+
 class ImageThread(QThread):
     changePixmap = pyqtSignal(QImage)
 
@@ -24,11 +54,11 @@ class ImageThread(QThread):
             if ret:
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_index = ex.arduino.frame_index
-                print(frame_index)
-                if frame_index > 0:
-                    #ex.frames.append(frame)
-                    #ex.indices.append(frame_index-1)
-                    cv2.imwrite(f'data/{time.time()}-{frame_index}.jpg', frame)
+                #print(frame_index)
+                if frame_index > 0 and ex.directory_save_files_checkbox.isChecked() and ex.stop_acquisition_signal is False:
+                    ex.frames.append(frame)
+                    ex.indices.append(frame_index-1)
+                    #
                 h, w, ch = rgbImage.shape
                 bytesPerLine = ch * w
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
@@ -100,13 +130,16 @@ class App(QWidget):
         self.directory_cell.setMinimumWidth(150)
         self.directory_cell.setReadOnly(True)
         self.directory_window.addWidget(self.directory_cell)
-        self.save_button = QPushButton("Save Files")
+        self.save_button = QPushButton("Stop Acquisition")
         self.save_button.clicked.connect(self.open_save_thread)
         self.directory_window.addWidget(self.save_button)
         self.settings_window.addLayout(self.directory_window)
         self.save_button.setEnabled(False)
 
         self.main_layout.addLayout(self.settings_window)
+        
+        self.progress_bar = QProgressBar()
+        self.main_layout.addWidget(self.progress_bar)
 
         self.preview_window = QVBoxLayout()
         self.preview_label = QLabel("Webcam Preview")
@@ -122,6 +155,7 @@ class App(QWidget):
         self.arduino = Arduino("/dev/tty.usbmodem1301", "leo")
 
         self.label = QLabel(self)
+        self.all_files_saved = False
         #self.label.move(280, 120)
         #self.label.resize(640, 480)
         self.preview_window.addWidget(self.label)
@@ -130,8 +164,20 @@ class App(QWidget):
         th.start()
         self.show()
         self.launch_camera()
+        self.open_live_preview_thread()
+        self.open_progress_bar_thread()
         #self.open_camera_process()
-        #self.open_live_preview_thread()
+        self.stop_acquisition_signal = False
+
+    def open_progress_bar_thread(self):
+        self.progress_bar_thread = ProgressThread()
+        self.progress_bar_thread.setApp(self)
+        self.progress_bar_thread._signal.connect(self.signal_accept)
+        self.progress_bar_thread.start()
+
+    def signal_accept(self, msg):
+        self.progress_bar.setMaximum(int(msg[0]))
+        self.progress_bar.setValue(int(msg[1]))
 
     def open_live_preview_thread(self):
         self.live_preview_thread = Thread(target=self.start_live)
@@ -140,10 +186,23 @@ class App(QWidget):
     def start_live(self):
         while True:
             try:
-                print(self.indices[-1])
-                time.sleep(1)
-            except Exception:
-                pass
+                images_number = len(os.listdir(self.directory))
+                #self.progress_bar.setText(f"{images_number}/{len(self.frames)} Images Saved")
+                #self.progress_bar.setRange(0, len(self.frames))
+                #self.progress_bar.setValue(images_number)
+                #print("____________________________")
+                #print(len(ex.frames))
+                #print(images_number)
+                #print("____________________________")
+                if len(self.frames) > images_number:
+                    cv2.imwrite(f'{self.directory}/{time.time()}-{ex.indices[images_number]}.jpg', ex.frames[images_number])
+                else:
+                    if self.stop_acquisition_signal:
+                        break
+            except Exception as err:
+                print(err)
+        self.all_files_saved = True
+        print("Frames saved")
 
     def stop_live(self):
         self.camera.video_running = False
@@ -164,6 +223,11 @@ class App(QWidget):
         folder = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.save_button.setEnabled(True)
         self.directory_cell.setText(folder)
+        self.directory = os.path.join(folder, self.experiment_name_cell.text())
+        try:
+            os.mkdir(self.directory)
+        except Exception:
+            pass
 
     def enable_directory(self):
         self.files_saved = self.directory_save_files_checkbox.isChecked()
@@ -181,12 +245,8 @@ class App(QWidget):
             directory (str): The location in which to save the NPY file
         """
         self.save_button.setEnabled(False)
-        try:
-            os.mkdir(f"{self.directory_cell.text()}/{self.experiment_name_cell.text()}")
-        except Exception:
-            pass
-        np.save(f"{self.directory_cell.text()}/{self.experiment_name_cell.text()}/webcam-data", self.frames)
-        np.save(f"{self.directory_cell.text()}/{self.experiment_name_cell.text()}/frame-indices-data", self.indices)
+        self.arduino.acquisition_running = False
+        self.stop_acquisition_signal = True
 
 
 if __name__ == '__main__':
