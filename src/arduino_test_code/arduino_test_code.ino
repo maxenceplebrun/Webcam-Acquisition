@@ -20,7 +20,6 @@ void loop(){
   Serial.println(pulseCount);
   if(Serial.available()){
         String serial_command = Serial.readStringUntil('\n');
-        Serial.println(serial_command);
         if (serial_command == "reset"){
           pulseCount = 0;
         }}
