@@ -13,25 +13,6 @@ from threading import Thread
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from src.controls import Arduino
 
-class ProgressThread(QThread):
-    _signal = pyqtSignal(list)
-    def __init__(self):
-        super(ProgressThread, self).__init__()
-
-    def __del__(self):
-        self.wait()
-
-    def setApp(self, app):
-        self.app = app
-
-    def run(self):
-        while not self.app.all_files_saved and not self.app.close_signal:
-            time.sleep(0.5)
-            try:
-                self._signal.emit([len(self.app.frames), len(os.listdir(self.app.directory))])
-            except Exception:
-                pass
-
 class ImageThread(QThread):
     changePixmap = pyqtSignal(QImage)
 
@@ -58,13 +39,14 @@ class App(QWidget):
         self.title = 'Webcam Acquisition'
         self.left = 10
         self.top = 10
-        self.frames = []
-        self.indices = []
         self.width = 600
         self.height = 800
+        self.open_acquisition_thread()
+        self.frames = []
+        self.indices = []
         self.stop_acquisition_signal = False
         self.close_signal = False
-        self.cwd = os.path.dirname(os.path.dirname(__file__))
+        self.arduino = Arduino("/dev/tty.usbmodem1301")
         self.initUI()
 
     @pyqtSlot(QImage)
@@ -85,36 +67,30 @@ class App(QWidget):
         self.settings_window = QVBoxLayout()
         self.settings_window.setAlignment(Qt.AlignTop)
 
-        self.experiment_label = QLabel("Experiment Settings")
-        self.settings_window.addWidget(self.experiment_label)
-
         self.experiment_name_window = QHBoxLayout()
         self.experiment_name = QLabel('Experiment Name')
         self.experiment_name_window.addWidget(self.experiment_name)
         self.experiment_name_cell = QLineEdit()
+        self.experiment_name_cell.textChanged.connect(self.verify_name)
         self.experiment_name_window.addWidget(self.experiment_name_cell)
         self.settings_window.addLayout(self.experiment_name_window)
 
         self.directory_window = QHBoxLayout()
-        self.directory_save_files_checkbox = QCheckBox()
-        self.directory_save_files_checkbox.setText("Save")
+        self.directory_save_files_checkbox = QCheckBox("Save")
+        self.directory_save_files_checkbox.setEnabled(False)
         self.directory_save_files_checkbox.stateChanged.connect(self.enable_directory)
         self.directory_window.addWidget(self.directory_save_files_checkbox)
-
         self.directory_cell = QLineEdit()
         self.directory_cell.setMinimumWidth(150)
         self.directory_cell.setReadOnly(True)
         self.directory_window.addWidget(self.directory_cell)
         self.stop_button = QPushButton("Stop Acquisition")
+        self.stop_button.setEnabled(False)
         self.stop_button.clicked.connect(self.stop)
         self.directory_window.addWidget(self.stop_button)
         self.settings_window.addLayout(self.directory_window)
-        self.stop_button.setEnabled(False)
 
         self.main_layout.addLayout(self.settings_window)
-        
-        self.progress_bar = QProgressBar()
-        #self.main_layout.addWidget(self.progress_bar)
 
         self.preview_window = QVBoxLayout()
         self.preview_label = QLabel("Webcam Preview")
@@ -123,12 +99,7 @@ class App(QWidget):
         self.preview_window.addWidget(self.label)
         self.main_layout.addLayout(self.preview_window)
 
-        self.arduino = Arduino("/dev/tty.usbmodem1301")
-
-        #self.label.move(280, 120)
-        #self.label.resize(640, 480)
         self.show()
-        self.open_acquisition_thread()
 
     def open_acquisition_thread(self):
         self.acquisition_thread = ImageThread(self)
@@ -144,19 +115,19 @@ class App(QWidget):
 
     def save_images(self):
         while not self.close_signal:
-            images_size = len(os.listdir(self.directory))
-            #if len(self.frames) > images_size:
-                #cv2.imwrite(f'{self.directory}/{time.time()}-{ex.indices[images_size]}.jpg', ex.frames[images_size])
             if len(self.frames) > 0:
                 self.video_feed.write(self.frames.pop(0))
             else:
                 if self.stop_acquisition_signal:
                     break
         self.video_feed.release()
+        np.save(f"{self.directory}/indices.npy", self.indices)
+
+    def verify_name(self):
+        self.directory_save_files_checkbox.setEnabled(self.experiment_name_cell.text() != "")
         
     def enable_directory(self):
-        folder = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        self.directory = os.path.join(folder, self.experiment_name_cell.text())
+        self.directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.directory_cell.setText(self.directory)
         self.directory_save_files_checkbox.setEnabled(False)
         self.stop_button.setEnabled(True)
@@ -164,10 +135,9 @@ class App(QWidget):
             os.mkdir(self.directory)
         except Exception:
             pass
-        self.video_feed = cv2.VideoWriter(f"{self.directory}/output_video.mp4",cv2.VideoWriter_fourcc(*'mp4v'), 30, (1920, 1080))
+        self.video_feed = cv2.VideoWriter(f"{self.directory}/{self.experiment_name_cell.text()}.mp4",cv2.VideoWriter_fourcc(*'mp4v'), 30, (1920, 1080))
         self.open_read_serial_thread()
         self.open_save_images_thread()
-        #self.open_progress_bar_thread()
 
     def stop(self):
         self.stop_acquisition_signal = True
