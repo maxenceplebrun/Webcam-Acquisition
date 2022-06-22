@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QCheckBox, QPushButton, QFileDialog, QApplication, QProgressBar
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QProgressBar
 from PyQt5.QtGui import QFont, QIcon, QImage, QPixmap
 from PyQt5.QtCore import Qt, QThread, Qt, pyqtSignal, pyqtSlot
 import matplotlib.pyplot as plt
@@ -23,7 +23,7 @@ class ImageThread(QThread):
             if ret:
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_index = ex.arduino.frame_index
-                if frame_index > 0 and ex.directory_save_files_checkbox.isChecked() and ex.stop_acquisition_signal is False:
+                if frame_index > 0 and ex.stop_acquisition_signal is False:
                     ex.frames.append(frame)
                     ex.indices.append(frame_index-1)
                 h, w, ch = rgbImage.shape
@@ -76,15 +76,19 @@ class App(QWidget):
         self.settings_window.addLayout(self.experiment_name_window)
 
         self.directory_window = QHBoxLayout()
-        self.directory_save_files_checkbox = QCheckBox("Save")
-        self.directory_save_files_checkbox.setEnabled(False)
-        self.directory_save_files_checkbox.stateChanged.connect(self.enable_directory)
-        self.directory_window.addWidget(self.directory_save_files_checkbox)
+        self.directory_label = QLabel("Directory")
+        self.directory_window.addWidget(self.directory_label)
         self.directory_cell = QLineEdit()
         self.directory_cell.setMinimumWidth(150)
         self.directory_cell.setReadOnly(True)
         self.directory_window.addWidget(self.directory_cell)
+        self.directory_save_files_button = QPushButton("Start Acquisition")
+        self.directory_save_files_button.setIcon(QIcon(os.path.join("gui","icons","player-play.png")))
+        self.directory_save_files_button.setEnabled(False)
+        self.directory_save_files_button.clicked.connect(self.enable_directory)
+        self.directory_window.addWidget(self.directory_save_files_button)
         self.stop_button = QPushButton("Stop Acquisition")
+        self.stop_button.setIcon(QIcon(os.path.join("gui","icons","player-stop.png")))
         self.stop_button.setEnabled(False)
         self.stop_button.clicked.connect(self.stop)
         self.directory_window.addWidget(self.stop_button)
@@ -124,12 +128,12 @@ class App(QWidget):
         np.save(f"{self.directory}/indices.npy", self.indices)
 
     def verify_name(self):
-        self.directory_save_files_checkbox.setEnabled(self.experiment_name_cell.text() != "")
+        self.directory_save_files_button.setEnabled(self.experiment_name_cell.text() != "")
         
     def enable_directory(self):
         self.directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.directory_cell.setText(self.directory)
-        self.directory_save_files_checkbox.setEnabled(False)
+        self.directory_save_files_button.setEnabled(False)
         self.stop_button.setEnabled(True)
         try:
             os.mkdir(self.directory)
@@ -143,7 +147,6 @@ class App(QWidget):
         self.stop_acquisition_signal = True
         self.arduino.acquisition_running = False
         self.stop_button.setEnabled(False)
-        self.video_feed.release()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
