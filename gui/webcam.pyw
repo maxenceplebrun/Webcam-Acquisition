@@ -1,14 +1,10 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QProgressBar
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication
 from PyQt5.QtGui import QFont, QIcon, QImage, QPixmap
 from PyQt5.QtCore import Qt, QThread, Qt, pyqtSignal, pyqtSlot
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import sys
 import os
-import time
 import cv2
 import numpy as np
-from multiprocessing import Process
 from threading import Thread
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from src.controls import Arduino
@@ -106,18 +102,22 @@ class App(QWidget):
         self.show()
 
     def open_acquisition_thread(self):
+        """Start the thread responsible for acquiring webcam frames"""
         self.acquisition_thread = ImageThread(self)
         self.acquisition_thread.changePixmap.connect(self.setImage)
         self.acquisition_thread.start()
 
     def open_read_serial_thread(self):
+        """Start the thread responsible for reading the Arduino serial output"""
         self.arduino.open_read_serial_thread()
 
     def open_save_images_thread(self):
+        """Start the thread responsible for image saving"""
         self.save_images_thread = Thread(target=self.save_images)
         self.save_images_thread.start()
 
     def save_images(self):
+        """Add buffered frames to the video and release it when done. Save indices array."""
         while not self.close_signal:
             if len(self.frames) > 0:
                 self.video_feed.write(self.frames.pop(0))
@@ -128,22 +128,21 @@ class App(QWidget):
         np.save(f"{self.directory}/indices.npy", self.indices)
 
     def verify_name(self):
+        """Verify that experiment name is not empty"""
         self.directory_save_files_button.setEnabled(self.experiment_name_cell.text() != "")
         
     def enable_directory(self):
+        """Choose the directory in which to save the video and start the serial read and image saving threads."""
         self.directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.directory_cell.setText(self.directory)
         self.directory_save_files_button.setEnabled(False)
         self.stop_button.setEnabled(True)
-        try:
-            os.mkdir(self.directory)
-        except Exception:
-            pass
         self.video_feed = cv2.VideoWriter(f"{self.directory}/{self.experiment_name_cell.text()}.mp4",cv2.VideoWriter_fourcc(*'mp4v'), 30, (1920, 1080))
         self.open_read_serial_thread()
         self.open_save_images_thread()
 
     def stop(self):
+        """Send a signal to stop acquiring new frames"""
         self.stop_acquisition_signal = True
         self.arduino.acquisition_running = False
         self.stop_button.setEnabled(False)

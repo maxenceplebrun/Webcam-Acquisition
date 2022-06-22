@@ -17,11 +17,13 @@ class Arduino():
         self.reset()
 
     def open_read_serial_thread(self):
+        """Start the thread responsible for reading the Arduino serial output"""
         self.acquisition_running = True
         self.read_serial_thread = Thread(target=self.read_serial)
         self.read_serial_thread.start()
 
     def read_serial(self):
+        """Read the serial output and sets the last read line as the frame index"""
         buffer_string = ''
         while self.acquisition_running:
             buffer_string = buffer_string + self.serial.read(self.serial.inWaiting()).decode("utf-8")
@@ -31,5 +33,6 @@ class Arduino():
                 buffer_string = lines[-1]
 
     def reset(self):
+        """Send Reset command to the Arduino, which makes its pulse count 0"""
         self.serial.write("reset".encode('utf-8'))
         self.serial.read(self.serial.in_waiting)
