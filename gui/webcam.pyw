@@ -1,7 +1,11 @@
+
+
+
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication
 from PyQt5.QtGui import QFont, QIcon, QImage, QPixmap
 from PyQt5.QtCore import Qt, QThread, Qt, pyqtSignal, pyqtSlot
 import sys
+import time
 import os
 import cv2
 import numpy as np
@@ -13,9 +17,9 @@ class ImageThread(QThread):
     changePixmap = pyqtSignal(QImage)
 
     def run(self):
-        cap = cv2.VideoCapture(0)
+        ex.cap = cv2.VideoCapture(0)
         while not ex.close_signal:
-            ret, frame = cap.read()
+            ret, frame = ex.cap.read()
             if ret:
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_index = ex.arduino.frame_index
@@ -42,7 +46,7 @@ class App(QWidget):
         self.indices = []
         self.stop_acquisition_signal = False
         self.close_signal = False
-        self.arduino = Arduino("/dev/tty.usbmodem1301")
+        self.arduino = Arduino("COM4")
         self.initUI()
 
     @pyqtSlot(QImage)
@@ -50,6 +54,7 @@ class App(QWidget):
         self.label.setPixmap(QPixmap.fromImage(image))
 
     def closeEvent(self, *args, **kwargs):
+        self.video_feed.release()
         self.arduino.acquisition_running = False
         self.close_signal = True
 
@@ -103,16 +108,19 @@ class App(QWidget):
 
     def open_acquisition_thread(self):
         """Start the thread responsible for acquiring webcam frames"""
+        print("acquisition thread open")
         self.acquisition_thread = ImageThread(self)
         self.acquisition_thread.changePixmap.connect(self.setImage)
         self.acquisition_thread.start()
 
     def open_read_serial_thread(self):
         """Start the thread responsible for reading the Arduino serial output"""
+        print("serial thread open")
         self.arduino.open_read_serial_thread()
 
     def open_save_images_thread(self):
         """Start the thread responsible for image saving"""
+        print("save images thread open")
         self.save_images_thread = Thread(target=self.save_images)
         self.save_images_thread.start()
 
@@ -123,9 +131,13 @@ class App(QWidget):
                 self.video_feed.write(self.frames.pop(0))
             else:
                 if self.stop_acquisition_signal:
+                    print("about to break")
                     break
-        self.video_feed.release()
-        np.save(f"{self.directory}/indices.npy", self.indices)
+        try:
+            self.video_feed.release()
+            np.save(f"{self.directory}/indices.npy", self.indices)
+        except Exception:
+            pass
 
     def verify_name(self):
         """Verify that experiment name is not empty"""
@@ -137,20 +149,22 @@ class App(QWidget):
         self.directory_cell.setText(self.directory)
         self.directory_save_files_button.setEnabled(False)
         self.stop_button.setEnabled(True)
-        self.video_feed = cv2.VideoWriter(f"{self.directory}/{self.experiment_name_cell.text()}.mp4",cv2.VideoWriter_fourcc(*'mp4v'), 30, (1920, 1080))
+        self.video_feed = cv2.VideoWriter(os.path.join(self.directory,f"{self.experiment_name_cell.text()}.mp4"), cv2.VideoWriter_fourcc(*'mp4v'), 30, (int(self.cap.get(3)),int(self.cap.get(4))))
         self.open_read_serial_thread()
         self.open_save_images_thread()
 
     def stop(self):
         """Send a signal to stop acquiring new frames"""
+        print("stop signal")
         self.stop_acquisition_signal = True
         self.arduino.acquisition_running = False
         self.stop_button.setEnabled(False)
+        print(self.stop_acquisition_signal)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    ex = App()
     font = QFont()
     font.setFamily("IBM Plex Sans")
     app.setFont(font)
-    ex = App()
     sys.exit(app.exec_())
