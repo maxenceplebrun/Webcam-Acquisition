@@ -13,9 +13,11 @@ class Arduino():
         """
         self.port = port
         self.frame_index = 0
-        self.serial= serial.Serial(port, 9600, timeout=1)
-        self.reset()
-
+        try:
+            self.serial= serial.Serial(port, 9600, timeout=1)
+            self.reset()
+        except Exception:
+            pass
     def open_read_serial_thread(self):
         """Start the thread responsible for reading the Arduino serial output"""
         self.acquisition_running = True

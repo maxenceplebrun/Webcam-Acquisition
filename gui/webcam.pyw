@@ -1,7 +1,7 @@
 
 
 
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QComboBox
 from PyQt5.QtGui import QFont, QIcon, QImage, QPixmap
 from PyQt5.QtCore import Qt, QThread, Qt, pyqtSignal, pyqtSlot
 import sys
@@ -18,6 +18,8 @@ class ImageThread(QThread):
 
     def run(self):
         ex.cap = cv2.VideoCapture(0)
+        ex.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        ex.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
         while not ex.close_signal:
             ret, frame = ex.cap.read()
             if ret:
@@ -74,6 +76,12 @@ class App(QWidget):
         self.experiment_name_cell = QLineEdit()
         self.experiment_name_cell.textChanged.connect(self.verify_name)
         self.experiment_name_window.addWidget(self.experiment_name_cell)
+        self.resolution_combo = QComboBox()
+        self.resolution_combo.currentIndexChanged.connect(self.change_resolution)
+        self.resolution_combo.addItem("1080p")
+        self.resolution_combo.addItem("720p")
+        self.resolution_combo.addItem("480p")
+        self.experiment_name_window.addWidget(self.resolution_combo)
         self.settings_window.addLayout(self.experiment_name_window)
 
         self.directory_window = QHBoxLayout()
@@ -106,6 +114,19 @@ class App(QWidget):
 
         self.show()
 
+    def change_resolution(self):
+        try:
+            if self.resolution_combo.currentText() == "1080p":
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+            if self.resolution_combo.currentText() == "720p":
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+            if self.resolution_combo.currentText() == "480p":
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        except Exception:
+            pass
     def open_acquisition_thread(self):
         """Start the thread responsible for acquiring webcam frames"""
         print("acquisition thread open")
