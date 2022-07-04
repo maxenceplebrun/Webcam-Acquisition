@@ -156,7 +156,7 @@ class App(QWidget):
                     break
         try:
             self.video_feed.release()
-            np.save(f"{self.directory}/indices.npy", self.indices)
+            np.save(os.path.join(self.directory,self.experiment_name_cell.text(),"indices.npy"), self.indices)
         except Exception:
             pass
 
@@ -170,7 +170,7 @@ class App(QWidget):
         self.directory_cell.setText(self.directory)
         self.directory_save_files_button.setEnabled(False)
         self.stop_button.setEnabled(True)
-        self.video_feed = cv2.VideoWriter(os.path.join(self.directory,f"{self.experiment_name_cell.text()}.mp4"), cv2.VideoWriter_fourcc(*'mp4v'), 30, (int(self.cap.get(3)),int(self.cap.get(4))))
+        self.video_feed = cv2.VideoWriter(os.path.join(self.directory, self.experiment_name_cell.text(), f"{self.experiment_name_cell.text()}.mp4"), cv2.VideoWriter_fourcc(*'mp4v'), 30, (int(self.cap.get(3)),int(self.cap.get(4))))
         self.open_read_serial_thread()
         self.open_save_images_thread()
 
