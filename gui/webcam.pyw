@@ -1,7 +1,7 @@
 
 
 
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QComboBox
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QComboBox, QMessageBox
 from PyQt5.QtGui import QFont, QIcon, QImage, QPixmap
 from PyQt5.QtCore import Qt, QThread, Qt, pyqtSignal, pyqtSlot
 import sys
@@ -167,12 +167,33 @@ class App(QWidget):
     def enable_directory(self):
         """Choose the directory in which to save the video and start the serial read and image saving threads."""
         self.directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        self.directory_cell.setText(self.directory)
-        self.directory_save_files_button.setEnabled(False)
-        self.stop_button.setEnabled(True)
-        self.video_feed = cv2.VideoWriter(os.path.join(self.directory, self.experiment_name_cell.text(), f"{self.experiment_name_cell.text()}.mp4"), cv2.VideoWriter_fourcc(*'mp4v'), 30, (int(self.cap.get(3)),int(self.cap.get(4))))
-        self.open_read_serial_thread()
-        self.open_save_images_thread()
+        if self.check_override:
+            self.directory_cell.setText(self.directory)
+            self.directory_save_files_button.setEnabled(False)
+            self.stop_button.setEnabled(True)
+            self.video_feed = cv2.VideoWriter(os.path.join(self.directory, self.experiment_name_cell.text(), f"{self.experiment_name_cell.text()}.mp4"), cv2.VideoWriter_fourcc(*'mp4v'), 30, (int(self.cap.get(3)),int(self.cap.get(4))))
+            self.open_read_serial_thread()
+            self.open_save_images_thread()
+
+    def check_override(self):
+        """ Check if experiment with the same name already exists"""
+        if os.path.isdir(
+            os.path.join(
+                self.directory,
+                self.experiment_name_cell.text()
+            )
+        ):
+            button = QMessageBox.question(
+                self,
+                "Directory already exists",
+                "Directory already exists. \n Do you want to continue?",
+            )
+            if button == QMessageBox.Yes:
+                return True
+            else:
+                return False
+        else:
+            return True
 
     def stop(self):
         """Send a signal to stop acquiring new frames"""
