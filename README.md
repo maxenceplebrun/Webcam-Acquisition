@@ -24,7 +24,7 @@
 <br />
 <div align="center">
   <a >
-    <img src="assets/logo.png" alt="Logo" width="80" height="80">
+    <img src="assets/logo.png" alt="Logo" width="130" height="130">
   </a>
 
   <h3 align="center">Webcam Acquisition</h3>
@@ -55,10 +55,8 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -66,20 +64,15 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-<div align="center">
-  <a >
-    <img src="assets/screenshot.png" alt="Logo" width="700">
-  </a>
-</div>
 
-There are many Widefield Imaging programs available on the Internet. However, they tend to be unnecessarily complex to use or limited in their capacities. With the present software, we hope to achieve a balance between usability and feature-richness, allowing simple acquisitions as well as complex workflows. Some of the main features of the program are:
-* The ability to acquire laser speckle, fluorescence and intrinsic optical imaging at the same time
-* The recursive stimulation generation tools, including different signal shapes and support for delay, jitter and repeat
-* The support for multiple stimulation channels and their visual rendering
-* The visual display of live video channels and activations maps
-* ...And much more!
 
-You can download the program by following the instructions below. Some indications are also given on how to adapt the program to your current setup. Note that **only National Instruments DAQs and IMAQ-compatible cameras have built-in support**. If you want to use other devices, you will need to so some coding on your own.
+For many scientific applications, it is useful to have a camera feed synchronised with another acquisition system. If both systems have the same acquisition rate, a common trigger can be used: if their sampling rate is different, a different approach must be used.
+
+This programs solves this problem by monitoring the trigger signal of the acquisition system with an Arduino Board. For each **Falling Edge** in the incoming signal, the Arduino increases its *Frames Acquired* index by one, thus tracking the number of frames acquired by the imaging system.
+
+This variable is then read by the Webcam software, which is running a indenpendent image acquisition using a USB webcam. For each webcam frame acquired, the program will save the *Frames Acquired* index in a separate NPY array. For each webcam image, it is therefore possible to know the corresponding Imaging System image.
+
+You can download the program by following the instructions below. Some indications are also given on how to adapt the program to your current setup.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
