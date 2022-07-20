@@ -1,4 +1,0 @@
-{
-    "board": "arduino:avr:leonardo",
-    "port": "/dev/tty.usbmodem1301"
-}
