@@ -9,6 +9,7 @@ import time
 import os
 import cv2
 import numpy as np
+import json
 from threading import Thread
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from src.controls import Arduino
@@ -39,6 +40,7 @@ class App(QWidget):
     def __init__(self):
         super().__init__()
         self.title = 'Webcam Acquisition'
+        self.cwd = os.path.dirname(os.path.dirname(__file__))
         self.left = 10
         self.top = 10
         self.width = 600
@@ -48,7 +50,9 @@ class App(QWidget):
         self.indices = []
         self.stop_acquisition_signal = False
         self.close_signal = False
-        self.arduino = Arduino("COM4")
+        with open(os.path.join(self.cwd, "config.json"), "r") as file:
+            self.config = json.load(file)
+        self.arduino = Arduino(self.config["arduino_port"])
         self.initUI()
 
     @pyqtSlot(QImage)
