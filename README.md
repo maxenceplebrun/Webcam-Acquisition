@@ -31,6 +31,7 @@
 
   <p align="center">
     A Python GUI designed to acquire webcam images synchronised with a widefield imaging system. 
+   [See the Documentation](https://maxenceplebrun.github.io/Webcam-Acquisition/)
   </p>
 </div>
 
