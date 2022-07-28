@@ -1,5 +1,3 @@
-import sys
-import os
 import serial
 from threading import Thread
 

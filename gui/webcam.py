@@ -1,11 +1,7 @@
-
-
-
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QComboBox, QMessageBox
 from PyQt5.QtGui import QFont, QIcon, QImage, QPixmap
 from PyQt5.QtCore import Qt, QThread, Qt, pyqtSignal, pyqtSlot
 import sys
-import time
 import os
 import cv2
 import numpy as np
@@ -18,6 +14,7 @@ class ImageThread(QThread):
     changePixmap = pyqtSignal(QImage)
 
     def run(self):
+        """Acquire webcam images and emit signal to update image"""
         ex.cap = cv2.VideoCapture(0)
         ex.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         ex.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
@@ -38,6 +35,7 @@ class ImageThread(QThread):
 class App(QWidget):
 
     def __init__(self):
+        """Initialize the application"""
         super().__init__()
         self.title = 'Webcam Acquisition'
         self.cwd = os.path.dirname(os.path.dirname(__file__))
@@ -57,14 +55,17 @@ class App(QWidget):
 
     @pyqtSlot(QImage)
     def setImage(self, image):
+        """Update the image in the GUI"""
         self.label.setPixmap(QPixmap.fromImage(image))
 
     def closeEvent(self, *args, **kwargs):
+        """Close the application"""
         self.video_feed.release()
         self.arduino.acquisition_running = False
         self.close_signal = True
 
     def initUI(self):
+        """Initialize the GUI"""
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.main_layout = QVBoxLayout()

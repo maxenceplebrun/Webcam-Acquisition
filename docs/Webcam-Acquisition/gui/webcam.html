@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>Webcam-Acquisition.gui.webcam API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>Webcam-Acquisition.gui.webcam</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QComboBox, QMessageBox
+from PyQt5.QtGui import QFont, QIcon, QImage, QPixmap
+from PyQt5.QtCore import Qt, QThread, Qt, pyqtSignal, pyqtSlot
+import sys
+import os
+import cv2
+import numpy as np
+import json
+from threading import Thread
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from src.controls import Arduino
+
+class ImageThread(QThread):
+    changePixmap = pyqtSignal(QImage)
+
+    def run(self):
+        &#34;&#34;&#34;Acquire webcam images and emit signal to update image&#34;&#34;&#34;
+        ex.cap = cv2.VideoCapture(0)
+        ex.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        ex.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        while not ex.close_signal:
+            ret, frame = ex.cap.read()
+            if ret:
+                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame_index = ex.arduino.frame_index
+                if frame_index &gt; 0 and ex.stop_acquisition_signal is False:
+                    ex.frames.append(frame)
+                    ex.indices.append(frame_index-1)
+                h, w, ch = rgbImage.shape
+                bytesPerLine = ch * w
+                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+                p = convertToQtFormat.scaled(960, 540, Qt.KeepAspectRatio)
+                self.changePixmap.emit(p)
+
+class App(QWidget):
+
+    def __init__(self):
+        &#34;&#34;&#34;Initialize the application&#34;&#34;&#34;
+        super().__init__()
+        self.title = &#39;Webcam Acquisition&#39;
+        self.cwd = os.path.dirname(os.path.dirname(__file__))
+        self.left = 10
+        self.top = 10
+        self.width = 600
+        self.height = 800
+        self.open_acquisition_thread()
+        self.frames = []
+        self.indices = []
+        self.stop_acquisition_signal = False
+        self.close_signal = False
+        with open(os.path.join(self.cwd, &#34;config.json&#34;), &#34;r&#34;) as file:
+            self.config = json.load(file)
+        self.arduino = Arduino(self.config[&#34;arduino_port&#34;])
+        self.initUI()
+
+    @pyqtSlot(QImage)
+    def setImage(self, image):
+        &#34;&#34;&#34;Update the image in the GUI&#34;&#34;&#34;
+        self.label.setPixmap(QPixmap.fromImage(image))
+
+    def closeEvent(self, *args, **kwargs):
+        &#34;&#34;&#34;Close the application&#34;&#34;&#34;
+        self.video_feed.release()
+        self.arduino.acquisition_running = False
+        self.close_signal = True
+
+    def initUI(self):
+        &#34;&#34;&#34;Initialize the GUI&#34;&#34;&#34;
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.main_layout = QVBoxLayout()
+        self.setLayout(self.main_layout)
+        self.main_layout.setAlignment(Qt.AlignTop)
+
+        self.settings_window = QVBoxLayout()
+        self.settings_window.setAlignment(Qt.AlignTop)
+
+        self.experiment_name_window = QHBoxLayout()
+        self.experiment_name = QLabel(&#39;Experiment Name&#39;)
+        self.experiment_name_window.addWidget(self.experiment_name)
+        self.experiment_name_cell = QLineEdit()
+        self.experiment_name_cell.textChanged.connect(self.verify_name)
+        self.experiment_name_window.addWidget(self.experiment_name_cell)
+        self.resolution_combo = QComboBox()
+        self.resolution_combo.currentIndexChanged.connect(self.change_resolution)
+        self.resolution_combo.addItem(&#34;1080p&#34;)
+        self.resolution_combo.addItem(&#34;720p&#34;)
+        self.resolution_combo.addItem(&#34;480p&#34;)
+        self.experiment_name_window.addWidget(self.resolution_combo)
+        self.settings_window.addLayout(self.experiment_name_window)
+
+        self.directory_window = QHBoxLayout()
+        self.directory_label = QLabel(&#34;Directory&#34;)
+        self.directory_window.addWidget(self.directory_label)
+        self.directory_cell = QLineEdit()
+        self.directory_cell.setMinimumWidth(150)
+        self.directory_cell.setReadOnly(True)
+        self.directory_window.addWidget(self.directory_cell)
+        self.directory_save_files_button = QPushButton(&#34;Start Acquisition&#34;)
+        self.directory_save_files_button.setIcon(QIcon(os.path.join(&#34;gui&#34;,&#34;icons&#34;,&#34;player-play.png&#34;)))
+        self.directory_save_files_button.setEnabled(False)
+        self.directory_save_files_button.clicked.connect(self.enable_directory)
+        self.directory_window.addWidget(self.directory_save_files_button)
+        self.stop_button = QPushButton(&#34;Stop Acquisition&#34;)
+        self.stop_button.setIcon(QIcon(os.path.join(&#34;gui&#34;,&#34;icons&#34;,&#34;player-stop.png&#34;)))
+        self.stop_button.setEnabled(False)
+        self.stop_button.clicked.connect(self.stop)
+        self.directory_window.addWidget(self.stop_button)
+        self.settings_window.addLayout(self.directory_window)
+
+        self.main_layout.addLayout(self.settings_window)
+
+        self.preview_window = QVBoxLayout()
+        self.preview_label = QLabel(&#34;Webcam Preview&#34;)
+        self.preview_window.addWidget(self.preview_label)
+        self.label = QLabel(self)
+        self.preview_window.addWidget(self.label)
+        self.main_layout.addLayout(self.preview_window)
+
+        self.show()
+
+    def change_resolution(self):
+        try:
+            if self.resolution_combo.currentText() == &#34;1080p&#34;:
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+            if self.resolution_combo.currentText() == &#34;720p&#34;:
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+            if self.resolution_combo.currentText() == &#34;480p&#34;:
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        except Exception:
+            pass
+    def open_acquisition_thread(self):
+        &#34;&#34;&#34;Start the thread responsible for acquiring webcam frames&#34;&#34;&#34;
+        print(&#34;acquisition thread open&#34;)
+        self.acquisition_thread = ImageThread(self)
+        self.acquisition_thread.changePixmap.connect(self.setImage)
+        self.acquisition_thread.start()
+
+    def open_read_serial_thread(self):
+        &#34;&#34;&#34;Start the thread responsible for reading the Arduino serial output&#34;&#34;&#34;
+        print(&#34;serial thread open&#34;)
+        self.arduino.open_read_serial_thread()
+
+    def open_save_images_thread(self):
+        &#34;&#34;&#34;Start the thread responsible for image saving&#34;&#34;&#34;
+        print(&#34;save images thread open&#34;)
+        self.save_images_thread = Thread(target=self.save_images)
+        self.save_images_thread.start()
+
+    def save_images(self):
+        &#34;&#34;&#34;Add buffered frames to the video and release it when done. Save indices array.&#34;&#34;&#34;
+        while not self.close_signal:
+            if len(self.frames) &gt; 0:
+                self.video_feed.write(self.frames.pop(0))
+            else:
+                if self.stop_acquisition_signal:
+                    print(&#34;about to break&#34;)
+                    break
+        try:
+            self.video_feed.release()
+            np.save(os.path.join(self.directory,self.experiment_name_cell.text(),&#34;indices.npy&#34;), self.indices)
+        except Exception:
+            pass
+
+    def verify_name(self):
+        &#34;&#34;&#34;Verify that experiment name is not empty&#34;&#34;&#34;
+        self.directory_save_files_button.setEnabled(self.experiment_name_cell.text() != &#34;&#34;)
+        
+    def enable_directory(self):
+        &#34;&#34;&#34;Choose the directory in which to save the video and start the serial read and image saving threads.&#34;&#34;&#34;
+        self.directory = str(QFileDialog.getExistingDirectory(self, &#34;Select Directory&#34;))
+        if self.check_override:
+            self.directory_cell.setText(self.directory)
+            self.directory_save_files_button.setEnabled(False)
+            self.stop_button.setEnabled(True)
+            self.video_feed = cv2.VideoWriter(os.path.join(self.directory, self.experiment_name_cell.text(), f&#34;{self.experiment_name_cell.text()}.mp4&#34;), cv2.VideoWriter_fourcc(*&#39;mp4v&#39;), 30, (int(self.cap.get(3)),int(self.cap.get(4))))
+            self.open_read_serial_thread()
+            self.open_save_images_thread()
+
+    def check_override(self):
+        &#34;&#34;&#34; Check if experiment with the same name already exists&#34;&#34;&#34;
+        if os.path.isdir(
+            os.path.join(
+                self.directory,
+                self.experiment_name_cell.text()
+            )
+        ):
+            button = QMessageBox.question(
+                self,
+                &#34;Directory already exists&#34;,
+                &#34;Directory already exists. \n Do you want to continue?&#34;,
+            )
+            if button == QMessageBox.Yes:
+                return True
+            else:
+                return False
+        else:
+            return True
+
+    def stop(self):
+        &#34;&#34;&#34;Send a signal to stop acquiring new frames&#34;&#34;&#34;
+        print(&#34;stop signal&#34;)
+        self.stop_acquisition_signal = True
+        self.arduino.acquisition_running = False
+        self.stop_button.setEnabled(False)
+        print(self.stop_acquisition_signal)
+
+if __name__ == &#39;__main__&#39;:
+    app = QApplication(sys.argv)
+    ex = App()
+    font = QFont()
+    font.setFamily(&#34;IBM Plex Sans&#34;)
+    app.setFont(font)
+    sys.exit(app.exec_())</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="Webcam-Acquisition.gui.webcam.App"><code class="flex name class">
+<span>class <span class="ident">App</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>QWidget(parent: QWidget = None, flags: Union[Qt.WindowFlags, Qt.WindowType] = Qt.WindowFlags())</p>
+<p>Initialize the application</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class App(QWidget):
+
+    def __init__(self):
+        &#34;&#34;&#34;Initialize the application&#34;&#34;&#34;
+        super().__init__()
+        self.title = &#39;Webcam Acquisition&#39;
+        self.cwd = os.path.dirname(os.path.dirname(__file__))
+        self.left = 10
+        self.top = 10
+        self.width = 600
+        self.height = 800
+        self.open_acquisition_thread()
+        self.frames = []
+        self.indices = []
+        self.stop_acquisition_signal = False
+        self.close_signal = False
+        with open(os.path.join(self.cwd, &#34;config.json&#34;), &#34;r&#34;) as file:
+            self.config = json.load(file)
+        self.arduino = Arduino(self.config[&#34;arduino_port&#34;])
+        self.initUI()
+
+    @pyqtSlot(QImage)
+    def setImage(self, image):
+        &#34;&#34;&#34;Update the image in the GUI&#34;&#34;&#34;
+        self.label.setPixmap(QPixmap.fromImage(image))
+
+    def closeEvent(self, *args, **kwargs):
+        &#34;&#34;&#34;Close the application&#34;&#34;&#34;
+        self.video_feed.release()
+        self.arduino.acquisition_running = False
+        self.close_signal = True
+
+    def initUI(self):
+        &#34;&#34;&#34;Initialize the GUI&#34;&#34;&#34;
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.main_layout = QVBoxLayout()
+        self.setLayout(self.main_layout)
+        self.main_layout.setAlignment(Qt.AlignTop)
+
+        self.settings_window = QVBoxLayout()
+        self.settings_window.setAlignment(Qt.AlignTop)
+
+        self.experiment_name_window = QHBoxLayout()
+        self.experiment_name = QLabel(&#39;Experiment Name&#39;)
+        self.experiment_name_window.addWidget(self.experiment_name)
+        self.experiment_name_cell = QLineEdit()
+        self.experiment_name_cell.textChanged.connect(self.verify_name)
+        self.experiment_name_window.addWidget(self.experiment_name_cell)
+        self.resolution_combo = QComboBox()
+        self.resolution_combo.currentIndexChanged.connect(self.change_resolution)
+        self.resolution_combo.addItem(&#34;1080p&#34;)
+        self.resolution_combo.addItem(&#34;720p&#34;)
+        self.resolution_combo.addItem(&#34;480p&#34;)
+        self.experiment_name_window.addWidget(self.resolution_combo)
+        self.settings_window.addLayout(self.experiment_name_window)
+
+        self.directory_window = QHBoxLayout()
+        self.directory_label = QLabel(&#34;Directory&#34;)
+        self.directory_window.addWidget(self.directory_label)
+        self.directory_cell = QLineEdit()
+        self.directory_cell.setMinimumWidth(150)
+        self.directory_cell.setReadOnly(True)
+        self.directory_window.addWidget(self.directory_cell)
+        self.directory_save_files_button = QPushButton(&#34;Start Acquisition&#34;)
+        self.directory_save_files_button.setIcon(QIcon(os.path.join(&#34;gui&#34;,&#34;icons&#34;,&#34;player-play.png&#34;)))
+        self.directory_save_files_button.setEnabled(False)
+        self.directory_save_files_button.clicked.connect(self.enable_directory)
+        self.directory_window.addWidget(self.directory_save_files_button)
+        self.stop_button = QPushButton(&#34;Stop Acquisition&#34;)
+        self.stop_button.setIcon(QIcon(os.path.join(&#34;gui&#34;,&#34;icons&#34;,&#34;player-stop.png&#34;)))
+        self.stop_button.setEnabled(False)
+        self.stop_button.clicked.connect(self.stop)
+        self.directory_window.addWidget(self.stop_button)
+        self.settings_window.addLayout(self.directory_window)
+
+        self.main_layout.addLayout(self.settings_window)
+
+        self.preview_window = QVBoxLayout()
+        self.preview_label = QLabel(&#34;Webcam Preview&#34;)
+        self.preview_window.addWidget(self.preview_label)
+        self.label = QLabel(self)
+        self.preview_window.addWidget(self.label)
+        self.main_layout.addLayout(self.preview_window)
+
+        self.show()
+
+    def change_resolution(self):
+        try:
+            if self.resolution_combo.currentText() == &#34;1080p&#34;:
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+            if self.resolution_combo.currentText() == &#34;720p&#34;:
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+            if self.resolution_combo.currentText() == &#34;480p&#34;:
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        except Exception:
+            pass
+    def open_acquisition_thread(self):
+        &#34;&#34;&#34;Start the thread responsible for acquiring webcam frames&#34;&#34;&#34;
+        print(&#34;acquisition thread open&#34;)
+        self.acquisition_thread = ImageThread(self)
+        self.acquisition_thread.changePixmap.connect(self.setImage)
+        self.acquisition_thread.start()
+
+    def open_read_serial_thread(self):
+        &#34;&#34;&#34;Start the thread responsible for reading the Arduino serial output&#34;&#34;&#34;
+        print(&#34;serial thread open&#34;)
+        self.arduino.open_read_serial_thread()
+
+    def open_save_images_thread(self):
+        &#34;&#34;&#34;Start the thread responsible for image saving&#34;&#34;&#34;
+        print(&#34;save images thread open&#34;)
+        self.save_images_thread = Thread(target=self.save_images)
+        self.save_images_thread.start()
+
+    def save_images(self):
+        &#34;&#34;&#34;Add buffered frames to the video and release it when done. Save indices array.&#34;&#34;&#34;
+        while not self.close_signal:
+            if len(self.frames) &gt; 0:
+                self.video_feed.write(self.frames.pop(0))
+            else:
+                if self.stop_acquisition_signal:
+                    print(&#34;about to break&#34;)
+                    break
+        try:
+            self.video_feed.release()
+            np.save(os.path.join(self.directory,self.experiment_name_cell.text(),&#34;indices.npy&#34;), self.indices)
+        except Exception:
+            pass
+
+    def verify_name(self):
+        &#34;&#34;&#34;Verify that experiment name is not empty&#34;&#34;&#34;
+        self.directory_save_files_button.setEnabled(self.experiment_name_cell.text() != &#34;&#34;)
+        
+    def enable_directory(self):
+        &#34;&#34;&#34;Choose the directory in which to save the video and start the serial read and image saving threads.&#34;&#34;&#34;
+        self.directory = str(QFileDialog.getExistingDirectory(self, &#34;Select Directory&#34;))
+        if self.check_override:
+            self.directory_cell.setText(self.directory)
+            self.directory_save_files_button.setEnabled(False)
+            self.stop_button.setEnabled(True)
+            self.video_feed = cv2.VideoWriter(os.path.join(self.directory, self.experiment_name_cell.text(), f&#34;{self.experiment_name_cell.text()}.mp4&#34;), cv2.VideoWriter_fourcc(*&#39;mp4v&#39;), 30, (int(self.cap.get(3)),int(self.cap.get(4))))
+            self.open_read_serial_thread()
+            self.open_save_images_thread()
+
+    def check_override(self):
+        &#34;&#34;&#34; Check if experiment with the same name already exists&#34;&#34;&#34;
+        if os.path.isdir(
+            os.path.join(
+                self.directory,
+                self.experiment_name_cell.text()
+            )
+        ):
+            button = QMessageBox.question(
+                self,
+                &#34;Directory already exists&#34;,
+                &#34;Directory already exists. \n Do you want to continue?&#34;,
+            )
+            if button == QMessageBox.Yes:
+                return True
+            else:
+                return False
+        else:
+            return True
+
+    def stop(self):
+        &#34;&#34;&#34;Send a signal to stop acquiring new frames&#34;&#34;&#34;
+        print(&#34;stop signal&#34;)
+        self.stop_acquisition_signal = True
+        self.arduino.acquisition_running = False
+        self.stop_button.setEnabled(False)
+        print(self.stop_acquisition_signal)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>PyQt5.QtWidgets.QWidget</li>
+<li>PyQt5.QtCore.QObject</li>
+<li>sip.wrapper</li>
+<li>PyQt5.QtGui.QPaintDevice</li>
+<li>sip.simplewrapper</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="Webcam-Acquisition.gui.webcam.App.change_resolution"><code class="name flex">
+<span>def <span class="ident">change_resolution</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def change_resolution(self):
+    try:
+        if self.resolution_combo.currentText() == &#34;1080p&#34;:
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        if self.resolution_combo.currentText() == &#34;720p&#34;:
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        if self.resolution_combo.currentText() == &#34;480p&#34;:
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    except Exception:
+        pass</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.check_override"><code class="name flex">
+<span>def <span class="ident">check_override</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check if experiment with the same name already exists</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_override(self):
+    &#34;&#34;&#34; Check if experiment with the same name already exists&#34;&#34;&#34;
+    if os.path.isdir(
+        os.path.join(
+            self.directory,
+            self.experiment_name_cell.text()
+        )
+    ):
+        button = QMessageBox.question(
+            self,
+            &#34;Directory already exists&#34;,
+            &#34;Directory already exists. \n Do you want to continue?&#34;,
+        )
+        if button == QMessageBox.Yes:
+            return True
+        else:
+            return False
+    else:
+        return True</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.closeEvent"><code class="name flex">
+<span>def <span class="ident">closeEvent</span></span>(<span>self, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Close the application</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def closeEvent(self, *args, **kwargs):
+    &#34;&#34;&#34;Close the application&#34;&#34;&#34;
+    self.video_feed.release()
+    self.arduino.acquisition_running = False
+    self.close_signal = True</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.enable_directory"><code class="name flex">
+<span>def <span class="ident">enable_directory</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Choose the directory in which to save the video and start the serial read and image saving threads.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def enable_directory(self):
+    &#34;&#34;&#34;Choose the directory in which to save the video and start the serial read and image saving threads.&#34;&#34;&#34;
+    self.directory = str(QFileDialog.getExistingDirectory(self, &#34;Select Directory&#34;))
+    if self.check_override:
+        self.directory_cell.setText(self.directory)
+        self.directory_save_files_button.setEnabled(False)
+        self.stop_button.setEnabled(True)
+        self.video_feed = cv2.VideoWriter(os.path.join(self.directory, self.experiment_name_cell.text(), f&#34;{self.experiment_name_cell.text()}.mp4&#34;), cv2.VideoWriter_fourcc(*&#39;mp4v&#39;), 30, (int(self.cap.get(3)),int(self.cap.get(4))))
+        self.open_read_serial_thread()
+        self.open_save_images_thread()</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.initUI"><code class="name flex">
+<span>def <span class="ident">initUI</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialize the GUI</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initUI(self):
+    &#34;&#34;&#34;Initialize the GUI&#34;&#34;&#34;
+    self.setWindowTitle(self.title)
+    self.setGeometry(self.left, self.top, self.width, self.height)
+    self.main_layout = QVBoxLayout()
+    self.setLayout(self.main_layout)
+    self.main_layout.setAlignment(Qt.AlignTop)
+
+    self.settings_window = QVBoxLayout()
+    self.settings_window.setAlignment(Qt.AlignTop)
+
+    self.experiment_name_window = QHBoxLayout()
+    self.experiment_name = QLabel(&#39;Experiment Name&#39;)
+    self.experiment_name_window.addWidget(self.experiment_name)
+    self.experiment_name_cell = QLineEdit()
+    self.experiment_name_cell.textChanged.connect(self.verify_name)
+    self.experiment_name_window.addWidget(self.experiment_name_cell)
+    self.resolution_combo = QComboBox()
+    self.resolution_combo.currentIndexChanged.connect(self.change_resolution)
+    self.resolution_combo.addItem(&#34;1080p&#34;)
+    self.resolution_combo.addItem(&#34;720p&#34;)
+    self.resolution_combo.addItem(&#34;480p&#34;)
+    self.experiment_name_window.addWidget(self.resolution_combo)
+    self.settings_window.addLayout(self.experiment_name_window)
+
+    self.directory_window = QHBoxLayout()
+    self.directory_label = QLabel(&#34;Directory&#34;)
+    self.directory_window.addWidget(self.directory_label)
+    self.directory_cell = QLineEdit()
+    self.directory_cell.setMinimumWidth(150)
+    self.directory_cell.setReadOnly(True)
+    self.directory_window.addWidget(self.directory_cell)
+    self.directory_save_files_button = QPushButton(&#34;Start Acquisition&#34;)
+    self.directory_save_files_button.setIcon(QIcon(os.path.join(&#34;gui&#34;,&#34;icons&#34;,&#34;player-play.png&#34;)))
+    self.directory_save_files_button.setEnabled(False)
+    self.directory_save_files_button.clicked.connect(self.enable_directory)
+    self.directory_window.addWidget(self.directory_save_files_button)
+    self.stop_button = QPushButton(&#34;Stop Acquisition&#34;)
+    self.stop_button.setIcon(QIcon(os.path.join(&#34;gui&#34;,&#34;icons&#34;,&#34;player-stop.png&#34;)))
+    self.stop_button.setEnabled(False)
+    self.stop_button.clicked.connect(self.stop)
+    self.directory_window.addWidget(self.stop_button)
+    self.settings_window.addLayout(self.directory_window)
+
+    self.main_layout.addLayout(self.settings_window)
+
+    self.preview_window = QVBoxLayout()
+    self.preview_label = QLabel(&#34;Webcam Preview&#34;)
+    self.preview_window.addWidget(self.preview_label)
+    self.label = QLabel(self)
+    self.preview_window.addWidget(self.label)
+    self.main_layout.addLayout(self.preview_window)
+
+    self.show()</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.open_acquisition_thread"><code class="name flex">
+<span>def <span class="ident">open_acquisition_thread</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Start the thread responsible for acquiring webcam frames</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def open_acquisition_thread(self):
+    &#34;&#34;&#34;Start the thread responsible for acquiring webcam frames&#34;&#34;&#34;
+    print(&#34;acquisition thread open&#34;)
+    self.acquisition_thread = ImageThread(self)
+    self.acquisition_thread.changePixmap.connect(self.setImage)
+    self.acquisition_thread.start()</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.open_read_serial_thread"><code class="name flex">
+<span>def <span class="ident">open_read_serial_thread</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Start the thread responsible for reading the Arduino serial output</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def open_read_serial_thread(self):
+    &#34;&#34;&#34;Start the thread responsible for reading the Arduino serial output&#34;&#34;&#34;
+    print(&#34;serial thread open&#34;)
+    self.arduino.open_read_serial_thread()</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.open_save_images_thread"><code class="name flex">
+<span>def <span class="ident">open_save_images_thread</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Start the thread responsible for image saving</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def open_save_images_thread(self):
+    &#34;&#34;&#34;Start the thread responsible for image saving&#34;&#34;&#34;
+    print(&#34;save images thread open&#34;)
+    self.save_images_thread = Thread(target=self.save_images)
+    self.save_images_thread.start()</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.save_images"><code class="name flex">
+<span>def <span class="ident">save_images</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add buffered frames to the video and release it when done. Save indices array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_images(self):
+    &#34;&#34;&#34;Add buffered frames to the video and release it when done. Save indices array.&#34;&#34;&#34;
+    while not self.close_signal:
+        if len(self.frames) &gt; 0:
+            self.video_feed.write(self.frames.pop(0))
+        else:
+            if self.stop_acquisition_signal:
+                print(&#34;about to break&#34;)
+                break
+    try:
+        self.video_feed.release()
+        np.save(os.path.join(self.directory,self.experiment_name_cell.text(),&#34;indices.npy&#34;), self.indices)
+    except Exception:
+        pass</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.setImage"><code class="name flex">
+<span>def <span class="ident">setImage</span></span>(<span>self, image)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update the image in the GUI</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pyqtSlot(QImage)
+def setImage(self, image):
+    &#34;&#34;&#34;Update the image in the GUI&#34;&#34;&#34;
+    self.label.setPixmap(QPixmap.fromImage(image))</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.stop"><code class="name flex">
+<span>def <span class="ident">stop</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Send a signal to stop acquiring new frames</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stop(self):
+    &#34;&#34;&#34;Send a signal to stop acquiring new frames&#34;&#34;&#34;
+    print(&#34;stop signal&#34;)
+    self.stop_acquisition_signal = True
+    self.arduino.acquisition_running = False
+    self.stop_button.setEnabled(False)
+    print(self.stop_acquisition_signal)</code></pre>
+</details>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.App.verify_name"><code class="name flex">
+<span>def <span class="ident">verify_name</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Verify that experiment name is not empty</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def verify_name(self):
+    &#34;&#34;&#34;Verify that experiment name is not empty&#34;&#34;&#34;
+    self.directory_save_files_button.setEnabled(self.experiment_name_cell.text() != &#34;&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.ImageThread"><code class="flex name class">
+<span>class <span class="ident">ImageThread</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>QThread(parent: QObject = None)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ImageThread(QThread):
+    changePixmap = pyqtSignal(QImage)
+
+    def run(self):
+        &#34;&#34;&#34;Acquire webcam images and emit signal to update image&#34;&#34;&#34;
+        ex.cap = cv2.VideoCapture(0)
+        ex.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        ex.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        while not ex.close_signal:
+            ret, frame = ex.cap.read()
+            if ret:
+                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame_index = ex.arduino.frame_index
+                if frame_index &gt; 0 and ex.stop_acquisition_signal is False:
+                    ex.frames.append(frame)
+                    ex.indices.append(frame_index-1)
+                h, w, ch = rgbImage.shape
+                bytesPerLine = ch * w
+                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+                p = convertToQtFormat.scaled(960, 540, Qt.KeepAspectRatio)
+                self.changePixmap.emit(p)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>PyQt5.QtCore.QThread</li>
+<li>PyQt5.QtCore.QObject</li>
+<li>sip.wrapper</li>
+<li>sip.simplewrapper</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="Webcam-Acquisition.gui.webcam.ImageThread.changePixmap"><code class="name flex">
+<span>def <span class="ident">changePixmap</span></span>(<span>...)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="Webcam-Acquisition.gui.webcam.ImageThread.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Acquire webcam images and emit signal to update image</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(self):
+    &#34;&#34;&#34;Acquire webcam images and emit signal to update image&#34;&#34;&#34;
+    ex.cap = cv2.VideoCapture(0)
+    ex.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    ex.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+    while not ex.close_signal:
+        ret, frame = ex.cap.read()
+        if ret:
+            rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame_index = ex.arduino.frame_index
+            if frame_index &gt; 0 and ex.stop_acquisition_signal is False:
+                ex.frames.append(frame)
+                ex.indices.append(frame_index-1)
+            h, w, ch = rgbImage.shape
+            bytesPerLine = ch * w
+            convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+            p = convertToQtFormat.scaled(960, 540, Qt.KeepAspectRatio)
+            self.changePixmap.emit(p)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="Webcam-Acquisition.gui" href="index.html">Webcam-Acquisition.gui</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="Webcam-Acquisition.gui.webcam.App" href="#Webcam-Acquisition.gui.webcam.App">App</a></code></h4>
+<ul class="">
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.change_resolution" href="#Webcam-Acquisition.gui.webcam.App.change_resolution">change_resolution</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.check_override" href="#Webcam-Acquisition.gui.webcam.App.check_override">check_override</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.closeEvent" href="#Webcam-Acquisition.gui.webcam.App.closeEvent">closeEvent</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.enable_directory" href="#Webcam-Acquisition.gui.webcam.App.enable_directory">enable_directory</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.initUI" href="#Webcam-Acquisition.gui.webcam.App.initUI">initUI</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.open_acquisition_thread" href="#Webcam-Acquisition.gui.webcam.App.open_acquisition_thread">open_acquisition_thread</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.open_read_serial_thread" href="#Webcam-Acquisition.gui.webcam.App.open_read_serial_thread">open_read_serial_thread</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.open_save_images_thread" href="#Webcam-Acquisition.gui.webcam.App.open_save_images_thread">open_save_images_thread</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.save_images" href="#Webcam-Acquisition.gui.webcam.App.save_images">save_images</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.setImage" href="#Webcam-Acquisition.gui.webcam.App.setImage">setImage</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.stop" href="#Webcam-Acquisition.gui.webcam.App.stop">stop</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.App.verify_name" href="#Webcam-Acquisition.gui.webcam.App.verify_name">verify_name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="Webcam-Acquisition.gui.webcam.ImageThread" href="#Webcam-Acquisition.gui.webcam.ImageThread">ImageThread</a></code></h4>
+<ul class="">
+<li><code><a title="Webcam-Acquisition.gui.webcam.ImageThread.changePixmap" href="#Webcam-Acquisition.gui.webcam.ImageThread.changePixmap">changePixmap</a></code></li>
+<li><code><a title="Webcam-Acquisition.gui.webcam.ImageThread.run" href="#Webcam-Acquisition.gui.webcam.ImageThread.run">run</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
