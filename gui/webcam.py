@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QComboBox, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QApplication, QComboBox, QMessageBox, QSlider
 from PyQt5.QtGui import QFont, QIcon, QImage, QPixmap
 from PyQt5.QtCore import Qt, QThread, Qt, pyqtSignal, pyqtSlot
 import sys
@@ -110,6 +110,16 @@ class App(QWidget):
 
         self.main_layout.addLayout(self.settings_window)
 
+
+        self.exposure_window = QHBoxLayout()
+        self.exposure_label = QLabel("Exposure")
+        self.exposure_window.addWidget(self.exposure_label)
+        self.exposure_slider = QSlider(Qt.Horizontal, self)
+        self.exposure_slider.setRange(0, 1000)
+        self.exposure_slider.setValue(0)
+        self.exposure_slider.valueChanged.connect(self.change_brightness)
+        self.exposure_window.addWidget(self.exposure_slider)
+        self.main_layout.addLayout(self.exposure_window)
         self.preview_window = QVBoxLayout()
         self.preview_label = QLabel("Webcam Preview")
         self.preview_window.addWidget(self.preview_label)
@@ -132,6 +142,9 @@ class App(QWidget):
                 self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         except Exception:
             pass
+
+    def change_brightness(self, value):
+        self.cap.set(cv2.CAP_PROP_BRIGHTNESS, value)
     def open_acquisition_thread(self):
         """Start the thread responsible for acquiring webcam frames"""
         print("acquisition thread open")
