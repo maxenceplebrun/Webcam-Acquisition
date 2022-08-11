@@ -60,7 +60,10 @@ class App(QWidget):
 
     def closeEvent(self, *args, **kwargs):
         """Close the application"""
-        self.video_feed.release()
+        try:
+	    self.video_feed.release()
+	except Exception:
+	    pass
         self.arduino.acquisition_running = False
         self.close_signal = True
 
@@ -115,7 +118,7 @@ class App(QWidget):
         self.exposure_label = QLabel("Exposure")
         self.exposure_window.addWidget(self.exposure_label)
         self.exposure_slider = QSlider(Qt.Horizontal, self)
-        self.exposure_slider.setRange(0, 1000)
+        self.exposure_slider.setRange(0, 100)
         self.exposure_slider.setValue(0)
         self.exposure_slider.valueChanged.connect(self.change_brightness)
         self.exposure_window.addWidget(self.exposure_slider)
