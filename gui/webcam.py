@@ -61,9 +61,9 @@ class App(QWidget):
     def closeEvent(self, *args, **kwargs):
         """Close the application"""
         try:
-	    self.video_feed.release()
-	except Exception:
-	    pass
+            self.video_feed.release()
+        except Exception:
+            pass
         self.arduino.acquisition_running = False
         self.close_signal = True
 
